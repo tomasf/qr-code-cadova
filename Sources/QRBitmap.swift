@@ -1,8 +1,6 @@
 import Foundation
 import Cadova
-import CoreImage
-import CoreImage.CIFilterBuiltins
-import AppKit
+import SwiftQR
 
 enum QRContent {
     case url (URL)
@@ -20,25 +18,18 @@ enum QRContent {
 
 struct QRBitmap: Shape2D, @unchecked Sendable {
     let content: QRContent
-    let correctionLevel: String
+    let correctionLevel: QRErrorCorrectionLevel
 
-    init(content: QRContent, correctionLevel: String = "M") {
+    init(content: QRContent, correctionLevel: QRErrorCorrectionLevel = .medium) {
         self.content = content
         self.correctionLevel = correctionLevel
     }
 
     var body: any Geometry2D {
-        let filter = CIFilter.qrCodeGenerator()
-        filter.message = content.message.data(using: .utf8)!
-        filter.correctionLevel = correctionLevel
-
-        if let ciImage = filter.outputImage {
-            let bitmap = NSBitmapImageRep(ciImage: ciImage)
-
-            for x in 0..<Int(bitmap.size.width) {
-                for y in 0..<Int(bitmap.size.height) {
-                    let isSet = (bitmap.colorAt(x: x, y: y)?.brightnessComponent ?? 1.0) < 0.5
-                    if isSet {
+        if let qrCode = try? QRCode.encode(content.message, errorCorrection: correctionLevel) {
+            for x in 0..<qrCode.size {
+                for y in 0..<qrCode.size {
+                    if qrCode.module(at: x, y: y) {
                         Rectangle(1)
                             .translated(x: Double(x), y: Double(y))
                     }

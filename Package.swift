@@ -6,11 +6,15 @@ let package = Package(
     platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/tomasf/Cadova.git", .upToNextMinor(from: "0.6.0")),
+        .package(url: "https://github.com/CorvidLabs/swift-qr.git", branch: "main"),
     ],
     targets: [
         .executableTarget(
             name: "model",
-            dependencies: ["Cadova"],
+            dependencies: [
+                "Cadova",
+                .product(name: "SwiftQR", package: "swift-qr"),
+            ],
             swiftSettings: [.interoperabilityMode(.Cxx)]
         ),
     ]

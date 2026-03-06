@@ -1,7 +1,7 @@
 import Cadova
 import Foundation
 
-await Project {
+await Project(packageRelative: "Models") {
     await Model("Example Network") {
         QRSign(code: .wifi(ssid: "Example Network", password: "mypassword"), caption: "Wi-Fi")
             .rotated(x: 180° - 75°)
