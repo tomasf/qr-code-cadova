@@ -18,7 +18,7 @@ struct QRSign: Shape3D {
 
         let codeSize = frontSize - 2 * edgeMargin
 
-        Stack(.y, spacing: itemSpacing, alignment: .centerX) {
+        let stack: any Geometry2D = Stack(.y, spacing: itemSpacing, alignment: .centerX) {
             if let caption {
                 Text(caption)
                     .withFont("SF Pro Rounded", style: "Bold", size: 10)
@@ -28,7 +28,8 @@ struct QRSign: Shape3D {
                 .aligned(at: .center)
                 .resized(x: codeSize, y: codeSize, alignment: .center)
         }
-        .aligned(at: .center)
+
+        stack.aligned(at: .center)
         .measuringBounds { content, bounds in
             let ySize = bounds.size.y + 2 * edgeMargin
             Rectangle(x: frontSize, y: ySize)
@@ -40,7 +41,7 @@ struct QRSign: Shape3D {
                         .flipped(along: .x)
                         .extruded(height: pixelDepth)
                         .colored(.black)
-                        .inPart(named: "Foreground")
+                        .inPart(Part("Foreground"))
                 }
                 .aligned(at: .minY)
         }
@@ -61,6 +62,6 @@ struct QRSign: Shape3D {
                 .rotated(x: footAngle)
                 .within(z: 0...)
         }
-        .inPart(named: "Base")
+        .inPart(Part("Base"))
     }
 }
