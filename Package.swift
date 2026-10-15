@@ -15,8 +15,8 @@ let package = Package(
                 "Cadova",
                 .product(name: "SwiftQR", package: "swift-qr"),
             ],
-            exclude: ["Resources/Nunito-OFL.txt"],
-            resources: [.copy("Resources/Nunito.ttf")],
+            exclude: ["Resources/Fredoka-OFL.txt"],
+            resources: [.copy("Resources/Fredoka.ttf")],
             swiftSettings: [.interoperabilityMode(.Cxx)]
         ),
     ]

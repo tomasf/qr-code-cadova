@@ -1,5 +1,5 @@
 {
-  "originHash" : "bdbc25f53a8a231e2ef45cb0ba833ce1f1ff946816d219802c5da97339ecec10",
+  "originHash" : "5f4279e661e8c477ae2fddb911c5d7e35b2db23cbf527d39dfe30144033aa72d",
   "pins" : [
     {
       "identity" : "apus",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/tomasf/Cadova.git",
       "state" : {
         "branch" : "dev",
-        "revision" : "8a99dc9cf0fcff882c596b91be1e78f8ab6d80ed"
+        "revision" : "5f43d4450c52602402cabb0bdfb0c0663d6a4614"
       }
     },
     {
