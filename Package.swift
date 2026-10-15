@@ -1,11 +1,11 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.3
 import PackageDescription
 
 let package = Package(
     name: "model",
-    platforms: [.macOS(.v14)],
+    platforms: [.macOS(.v15)],
     dependencies: [
-        .package(url: "https://github.com/tomasf/Cadova.git", .upToNextMinor(from: "0.6.0")),
+        .package(url: "https://github.com/tomasf/Cadova.git", branch: "dev"),
         .package(url: "https://github.com/CorvidLabs/swift-qr.git", branch: "main"),
     ],
     targets: [
@@ -15,6 +15,8 @@ let package = Package(
                 "Cadova",
                 .product(name: "SwiftQR", package: "swift-qr"),
             ],
+            exclude: ["Resources/Nunito-OFL.txt"],
+            resources: [.copy("Resources/Nunito.ttf")],
             swiftSettings: [.interoperabilityMode(.Cxx)]
         ),
     ]

@@ -1,19 +1,21 @@
 import Foundation
 import Cadova
 
-struct QRSign: Shape3D {
+struct QRSign: Geometry3D {
     let code: QRContent
     let caption: String?
+    var frontSize = 80.0
+    var footAngle = 75°
+
+    static let font = Bundle.module.url(forResource: "Nunito", withExtension: "ttf")
 
     var body: any Geometry3D {
-        let frontSize = 80.0
         let thickness = 3.0
         let edgeMargin = 7.0
         let itemSpacing = 5.0
         let cornerRadius = 7.0
 
         let footDepth = 35.0
-        let footAngle = 75°
         let pixelDepth = 0.6
 
         let codeSize = frontSize - 2 * edgeMargin
@@ -21,7 +23,8 @@ struct QRSign: Shape3D {
         let stack: any Geometry2D = Stack(.y, spacing: itemSpacing, alignment: .centerX) {
             if let caption {
                 Text(caption)
-                    .withFont("SF Pro Rounded", style: "Bold", size: 10)
+                    .withFont("Nunito", size: 10, from: Self.font)
+                    .withFontVariations([.weight(700)])
             }
 
             QRBitmap(content: code)

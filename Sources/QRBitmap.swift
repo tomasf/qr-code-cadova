@@ -6,6 +6,17 @@ enum QRContent {
     case url (URL)
     case wifi (ssid: String, password: String)
 
+    enum Kind: String, ParameterChoice {
+        case wifi, url
+
+        var displayName: String {
+            switch self {
+            case .wifi: "Wi-Fi network"
+            case .url: "Web address"
+            }
+        }
+    }
+
     var message: String {
         switch self {
         case .url (let url):
@@ -16,7 +27,7 @@ enum QRContent {
     }
 }
 
-struct QRBitmap: Shape2D, @unchecked Sendable {
+struct QRBitmap: Geometry2D, @unchecked Sendable {
     let content: QRContent
     let correctionLevel: QRErrorCorrectionLevel
 
