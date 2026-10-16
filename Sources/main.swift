@@ -7,7 +7,9 @@ await Project(packageRelative: "Models") {
 
         Metadata(
             title: "QR Code Sign",
-            description: "A standing sign with a QR code for a Wi-Fi network or a web address, and an optional caption."
+            description: "A standing sign with a QR code for a Wi-Fi network or a web address, and an optional caption.",
+            author: "Tomas Wincent Franzén",
+            license: "MIT"
         )
 
         @Parameter("Width", in: 50...150, step: 1, unit: "mm")
