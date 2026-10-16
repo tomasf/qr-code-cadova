@@ -18,11 +18,8 @@ await Project(packageRelative: "Models") {
         @Parameter("Thickness", in: 1.5...8, step: 0.5, unit: "mm", description: "Thickness of the sign and its foot")
         var thickness = 4.0
 
-        @Parameter("Angle", in: 60°...90°, step: 1°, description: "Angle between the sign and the surface it stands on")
+        @Parameter("Angle", in: 50°...90°, step: 1°, description: "Angle between the sign and the surface it stands on")
         var angle = 75°
-
-        @Parameter("Foot length", in: 20...80, step: 1, unit: "mm", description: "How far the foot reaches behind the sign")
-        var footLength = 35.0
 
         @Parameter("Caption", description: "Text below the code. Leave it empty for none.")
         var caption = "Wi-Fi"
@@ -49,7 +46,6 @@ await Project(packageRelative: "Models") {
             caption: caption.isEmpty ? nil : caption,
             frontSize: width,
             footAngle: angle,
-            footDepth: footLength,
             textSize: textSize,
             thickness: thickness
         )

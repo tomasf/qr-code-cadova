@@ -6,11 +6,17 @@ struct QRSign: Geometry3D {
     let caption: String?
     var frontSize = 80.0
     var footAngle = 75°
-    var footDepth = 35.0
     var textSize = 10.0
     var thickness = 4.0
 
     static let font = Bundle.module.url(forResource: "Fredoka", withExtension: "ttf")
+
+    /// How far the foot reaches behind a sign of the given height, leaning at the given angle: 10 mm
+    /// past the point under its top edge, so the weight stays over the foot even when the face is
+    /// pushed, and at least a third of its height, for signs that barely lean
+    static func footLength(signHeight: Double, angle: Angle) -> Double {
+        max(signHeight * cos(angle) + 10, signHeight / 3)
+    }
 
     var body: any Geometry3D {
         let edgeMargin = 7.0
@@ -33,9 +39,13 @@ struct QRSign: Geometry3D {
                 .resized(x: codeSize, y: codeSize, alignment: .center)
         }
 
-        let solid = stack.aligned(at: .center)
+        // The foot follows the sign's height, which depends on the caption, so it's made where the
+        // sign's size is known
+        stack.aligned(at: .center)
             .measuringBounds { content, bounds in
                 let ySize = bounds.size.y + 2 * edgeMargin
+                let footDepth = Self.footLength(signHeight: ySize, angle: footAngle)
+
                 Rectangle(x: frontSize, y: ySize)
                     .aligned(at: .center)
                     .cuttingEdgeProfile(.fillet(radius: cornerRadius), on: .top)
@@ -47,28 +57,26 @@ struct QRSign: Geometry3D {
                             .inPart(name: "Foreground", color: .black)
                     }
                     .aligned(at: .minY)
+                    .subtracting {
+                        Box(frontSize)
+                            .aligned(at: .centerX, .maxY)
+                            .rotated(x: -90° + footAngle)
+                    }
+                    .adding {
+                        let yExtension = thickness
+                        Rectangle(x: frontSize, y: footDepth + yExtension)
+                            .cuttingEdgeProfile(.fillet(radius: cornerRadius), on: .top)
+                            .aligned(at: .centerX)
+                            .translated(y: -yExtension)
+                            .extruded(height: thickness)
+                            .aligned(at: .top)
+                            .rotated(x: footAngle)
+                            .within(z: 0...)
+                    }
+                    // Round the inside corner between the sign and its foot. The code's pockets are cut
+                    // after this, so this is the only concave edge.
+                    .shapingEdges(.fillet(radius: footDepth * 0.3), matching: .concave)
             }
-            .subtracting {
-                Box(frontSize)
-                    .aligned(at: .centerX, .maxY)
-                    .rotated(x: -90° + footAngle)
-            }
-            .adding {
-                let yExtension = thickness
-                Rectangle(x: frontSize, y: footDepth + yExtension)
-                    .cuttingEdgeProfile(.fillet(radius: cornerRadius), on: .top)
-                    .aligned(at: .centerX)
-                    .translated(y: -yExtension)
-                    .extruded(height: thickness)
-                    .aligned(at: .top)
-                    .rotated(x: footAngle)
-                    .within(z: 0...)
-            }
-
-        // Round the inside corner between the sign and its foot. The code's pockets are cut after
-        // this, so this is the only concave edge.
-        solid
-            .shapingEdges(.fillet(radius: footDepth * 0.3), matching: .concave)
             .subtractingParts()
             .inPart(name: "Base", color: .white)
     }
